@@ -89,5 +89,6 @@ fn extract_images(document: &Html) -> Vec<String> {
         .select(&img_selector)
         .filter_map(|element| element.value().attr("src"))
         .map(|src| src.to_string())
+        .filter(|url| url.starts_with("https://"))
         .collect()
 }
