@@ -26,7 +26,7 @@ All dependencies are managed through Cargo and listed in the `Cargo.toml` file.
 ## Running the Backend
 
 1. Ensure you have Rust and Cargo installed.
-2. Clone the repository: `git clone <repository_url>`
+2. Clone the repository: `git clone https://github.com/eaingaran/clarity.git`
 3. Navigate to the project directory: `cd clarity/backend`
 4. Build and run the server: `cargo run`
 
@@ -42,8 +42,8 @@ The backend will start running on `http://localhost:3000`.
 ```json
 {
   "url": "url-of-the-article",
-  "model": "llama3.2", // Optional, defaults to llama3.2
-  "include_images": true // Optional, defaults to false
+  "model": "llama3.2", # Optional, defaults to llama3.2
+  "include_images": true # Optional, defaults to false
 }
 ```
 
@@ -54,12 +54,12 @@ The backend will start running on `http://localhost:3000`.
   "url": "url-of-the-article",
   "model": "llama3.2",
   "include_images": true,
-  "status": "Success!", // Or an error message
-  "images": ["image-url-1", "image-url-2"], // Optional, only sent when include_imagesis true
-  "title": "Article Title", // Optional
-  "description": "Article Description", // Optional
-  "short_summary": "Short summary of the article", // Optional
-  "long_summary": "Detailed summary of the article" // Optional
+  "status": "Success!", # Or an error message
+  "images": ["image-url-1", "image-url-2"], # Optional, only sent when include_imagesis true
+  "title": "Article Title", # Optional
+  "description": "Article Description", # Optional
+  "short_summary": "Short summary of the article", # Optional
+  "long_summary": "Detailed summary of the article" # Optional
 }
 ```
 
