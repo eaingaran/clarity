@@ -1,0 +1,19 @@
+[package]
+name = "clarity-backend"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.7.9"
+axum-macros = "0.4.2"
+hyper = { version = "1.5.1", features = ["server"] }
+reqwest = "0.12" # For making HTTP requests
+scraper = "0.21" # For HTML parsing
+serde = { version = "1.0", features = [
+    "derive",
+] } # For serialization/deserialization
+serde_json = "1.0" # For working with JSON
+thirtyfour = "0.34" # For Selenium (if needed for advanced scraping)
+thiserror = "2.0.3"
+tokio = { version = "1.41.1", features = ["full"] }
+url = "2.5.4"
