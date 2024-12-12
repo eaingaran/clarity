@@ -4,7 +4,7 @@ This project is a FastAPI-based backend service that provides text summarization
 
 ## Features
 
-- **Summarization:**  Generates short and long summaries of content from a given URL and text.
+- **Summarization:**  Generates short and long summaries of content from a given URL.
 - **Language Model Integration:**  Connects to a language model API (e.g., llama3.2) for summarization.
 
 ## Setup
@@ -12,7 +12,7 @@ This project is a FastAPI-based backend service that provides text summarization
 1. **Clone the repository:**
     ```bash
     git clone https://github.com/eaingaran/clarity.git
-    cd clarity/backend/summarizer
+    cd clarity/backend
     ```
 
 2. **Create virtual environment** (optional, but highly recommended)
@@ -21,18 +21,18 @@ This project is a FastAPI-based backend service that provides text summarization
     source .venv/bin/activate
     ```
 
-2.  **Install dependencies:**
+3.  **Install dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
 
-3.  **Configure the language model API:**
+4.  **Configure the language model API:**
     - Ensure the language model API is running (e.g., llama3.2 on http://localhost:11434).
     - You can modify the summarizer.py file to adjust the API endpoint if needed.
 
 ## Running the application
 ```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 3001
+  uvicorn main:app --reload --host 0.0.0.0 --port 3001
 ```
 
 This will start the FastAPI server on `http://0.0.0.0:3001`.
@@ -45,8 +45,7 @@ This will start the FastAPI server on `http://0.0.0.0:3001`.
         ```json
         {
           "url": "the url of the article",
-          "model": "llama3.2",  // Optional, defaults to llama3.2
-          "content": "The article content..."
+          "model": "llama3.2"  // Optional, defaults to llama3.2
         }
         ```
       - **Response Body:**
@@ -58,6 +57,7 @@ This will start the FastAPI server on `http://0.0.0.0:3001`.
           "title": "Extracted Title",
           "short_summary": "Short summary of the content",
           "long_summary": "Detailed summary of the content",
+          "image": "url of the image related to the article", // May not always be reliable
           "duration": 0.123  // Summarization time in milliseconds
         }
         ```
