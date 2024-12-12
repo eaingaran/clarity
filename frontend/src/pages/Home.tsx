@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Box,
@@ -12,20 +12,11 @@ import {
   Divider,
   Container,
   ToggleButton,
-  ToggleButtonGroup,
-  ImageList,
-  ImageListItem,
+  ToggleButtonGroup, CircularProgress,
 } from "@mui/material";
 import axios from "utils/axios";
 import ls from "localstorage-ttl";
 
-interface ScraperResponseData {
-  url: string;
-  include_images: boolean;
-  status: string;
-  images: string[];
-  content: string;
-}
 interface SummaryResponseData {
   url: string;
   model: string;
@@ -33,6 +24,7 @@ interface SummaryResponseData {
   title: string;
   short_summary: string;
   long_summary: string;
+  image: string;
   duration: number;
 }
 
@@ -42,13 +34,11 @@ const Home = () => {
     label: "Llama 3.2",
     id: "llama3.2",
   });
-  const [includeImages, setIncludeImages] = useState(false);
-  const [scraperResult, setScraperResult] =
-    useState<ScraperResponseData | null>(null);
+  const [includeImage, setIncludeImage] = useState(false);
   const [summaryResult, setSummaryResult] =
     useState<SummaryResponseData | null>(null);
   const [summarizing, setSummarizing] = useState(false);
-  const [viewMode, setViewMode] = useState<"short" | "long" | "images">(
+  const [viewMode, setViewMode] = useState<"short" | "long" | "image">(
     "short",
   );
   const [useCache, setUseCache] = useState(true);
@@ -69,10 +59,10 @@ const Home = () => {
     setSelectedModel(newValue);
   };
 
-  const handleIncludeImagesChange = (
+  const handleIncludeImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setIncludeImages(event.target.checked);
+    setIncludeImage(event.target.checked);
   };
 
   const handleUseCacheChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,19 +84,6 @@ const Home = () => {
     }
     try {
       setSummarizing(true);
-      const scraperResponse = await axios.post("/api/scrape", {
-        url,
-        include_images: includeImages,
-      });
-      console.log(scraperResponse.data);
-      const scraperResponseData: ScraperResponseData = scraperResponse.data;
-      setScraperResult(scraperResponseData);
-
-      if (!scraperResponseData || !scraperResponseData.content) {
-        console.log("Issue with the scraper response:", scraperResponseData);
-        setSummarizing(false);
-        return null;
-      }
 
       const cached_value = ls.get<SummaryResponseData>(url + selectedModel.id);
       if (cached_value && useCache) {
@@ -115,11 +92,10 @@ const Home = () => {
         setSummaryResult(cached_value);
       } else {
         const summaryResponse = await axios.post(
-          "https://summary.aingaran.dev/api/summarise",
+          "/api/summarise",
           {
             url,
             model: selectedModel.id,
-            content: scraperResponseData.content,
           },
         );
         console.log(summaryResponse.data);
@@ -140,7 +116,7 @@ const Home = () => {
 
   return (
     <>
-      <Container maxWidth="md" sx={{ mt: 10 }}>
+      <Container maxWidth="md" sx={{ mt: 10, mb: 10 }}>
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -171,7 +147,11 @@ const Home = () => {
                 fullWidth
                 disabled={!url || !isValidUrl(url) || summarizing}
               >
-                Submit
+                {summarizing ? (
+                    <CircularProgress size={24} />
+                ) : (
+                    "Submit"
+                )}
               </Button>
             </Grid>
           </Grid>
@@ -200,12 +180,12 @@ const Home = () => {
                 <FormControlLabel
                   control={
                     <Switch
-                      id="showImages"
-                      checked={includeImages}
-                      onChange={handleIncludeImagesChange}
+                      id="showImage"
+                      checked={includeImage}
+                      onChange={handleIncludeImageChange}
                     />
                   }
-                  label="Show Images"
+                  label="Show Image"
                 />
               </FormGroup>
             </Grid>
@@ -244,30 +224,24 @@ const Home = () => {
               >
                 <ToggleButton value="short">Short Summary</ToggleButton>
                 <ToggleButton value="long">Long Summary</ToggleButton>
-                <ToggleButton value="images">Images</ToggleButton>
+                <ToggleButton value="image">Image</ToggleButton>
               </ToggleButtonGroup>
               {viewMode === "short" && (
-                <Typography variant="body2" paragraph>
+                <Typography variant="body1" paragraph>
                   {summaryResult.short_summary}
                 </Typography>
               )}
               {viewMode === "long" && (
-                <Typography variant="body1" paragraph>
+                <Typography variant="body2" paragraph>
                   {summaryResult.long_summary}
                 </Typography>
               )}
-              {viewMode === "images" &&
-                (scraperResult?.include_images ? (
-                  <ImageList cols={3} gap={8}>
-                    {scraperResult.images.map((imageSrc) => (
-                      <ImageListItem key={imageSrc}>
-                        <img src={imageSrc} alt="Article" loading="lazy" />
-                      </ImageListItem>
-                    ))}
-                  </ImageList>
+              {viewMode === "image" &&
+                (includeImage  ? (
+                    <img src={summaryResult.image} alt="Article" loading="lazy"/>
                 ) : (
-                  <Typography variant="body2">
-                    Enable "Include Images" to see images from the article.
+                    <Typography variant="body1">
+                    Enable "Include Image" to see image from the article.
                   </Typography>
                 ))}
             </Box>

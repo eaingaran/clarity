@@ -4,7 +4,6 @@ from pydantic import BaseModel
 class SummaryRequestData(BaseModel):
     url: str
     model: Optional[str] = "llama3.2"
-    content: str
 
 class SummaryResponseData(BaseModel):
     url: str
@@ -13,4 +12,5 @@ class SummaryResponseData(BaseModel):
     title: Optional[str] = None
     short_summary: Optional[str] = None
     long_summary: Optional[str] = None
+    image: Optional[str] = None
     duration: Optional[float] = 0

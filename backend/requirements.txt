@@ -3,3 +3,5 @@ logging
 pydantic
 fastapi
 uvicorn
+goose3
+validators
